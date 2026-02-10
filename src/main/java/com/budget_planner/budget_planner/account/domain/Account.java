@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "name"}) })
+@Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(name = "uk_user_account", columnNames = {"user_id", "name"}) })
 public class Account {
 
     @Id

@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_settings", uniqueConstraints = { @UniqueConstraint(columnNames = "user_id") })
+@Table(name = "user_settings", uniqueConstraints = { @UniqueConstraint(name = "uk_user_settings", columnNames = "user_id") })
 @SuppressWarnings("FieldMayBeFinal")
 public class UserSettings {
 

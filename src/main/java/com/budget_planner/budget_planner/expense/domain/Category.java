@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "categories", uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "name"}) })
+@Table(name = "categories", uniqueConstraints = { @UniqueConstraint(name = "uk_user_category", columnNames = {"user_id", "name"}) })
 public class Category {
 
     @Id
