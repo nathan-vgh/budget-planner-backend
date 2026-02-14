@@ -1,8 +1,11 @@
 package com.budget_planner.budget_planner.user.application;
 
-import com.budget_planner.budget_planner.user.domain.User;
+import com.budget_planner.budget_planner.user.api.dto.CreateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.UpdateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.UserResponseDto;
+import com.budget_planner.budget_planner.user.exception.UserNotFoundException;
+import com.budget_planner.budget_planner.user.mapping.UserMapper;
 import com.budget_planner.budget_planner.user.persist.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -16,55 +19,54 @@ import java.util.UUID;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private static final String USER_NOT_FOUND = "User not found";
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl (UserRepository userRepository) {
+    public UserServiceImpl (UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDto createUser(CreateUserDto request) {
+        var createdUser = userRepository.save(userMapper.createRequestDtoToUser(request));
+        return userMapper.userToResponseDto(createdUser);
     }
 
     @Override
     public void deleteUser(UUID id) {
         try {
             userRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw userNotFound();
+        } catch (EmptyResultDataAccessException exception) {
+            throw new UserNotFoundException(id);
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<User> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserResponseDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::userToResponseDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserById(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(this::userNotFound);
+    public UserResponseDto getUserById(UUID id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return userMapper.userToResponseDto(user);
     }
 
     @Override
-    public User updateUser(UUID id, User user) {
+    public UserResponseDto updateUser(UUID id, UpdateUserDto request) {
         var userToBeUpdated = userRepository.findById(id)
-                .orElseThrow(this::userNotFound);
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-        if (user.getName() != null && !user.getName().isBlank())
-            userToBeUpdated.setName(user.getName());
+        if (request.name() != null && !request.name().isBlank())
+            userToBeUpdated.setName(request.name());
 
-        if (user.getEmail() != null && !user.getEmail().isBlank())
-            userToBeUpdated.setEmail(user.getEmail());
+        if (request.email() != null && !request.email().isBlank())
+            userToBeUpdated.setEmail(request.email());
 
-        return userToBeUpdated;
-    }
-
-    private EntityNotFoundException userNotFound () {
-        return new EntityNotFoundException(USER_NOT_FOUND);
+        return userMapper.userToResponseDto(userToBeUpdated);
     }
 }

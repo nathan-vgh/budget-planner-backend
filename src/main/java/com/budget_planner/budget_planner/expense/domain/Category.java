@@ -21,8 +21,8 @@ public class Category {
     @Size(max = 100)
     private String name;
 
-    @Size(max = 20)
-    private String color;
+    @Size(max = 10)
+    private Color color;
 
     @SuppressWarnings("FieldMayBeFinal")
     @Column(name = "created_at", nullable = false, updatable = false)

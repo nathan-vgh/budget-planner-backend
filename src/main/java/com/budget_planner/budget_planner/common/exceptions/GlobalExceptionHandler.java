@@ -1,6 +1,5 @@
 package com.budget_planner.budget_planner.common.exceptions;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -45,9 +44,10 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiError> handleEntityNotFound (EntityNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(new ApiError(exception.getMessage(), 404));
     }
 
