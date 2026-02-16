@@ -21,7 +21,7 @@ public class Category {
     @Size(max = 100)
     private String name;
 
-    @Size(max = 10)
+    @Enumerated(EnumType.STRING)
     private Color color;
 
     @SuppressWarnings("FieldMayBeFinal")
@@ -32,4 +32,44 @@ public class Category {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Category() {}
+
+    public Category(String name, Color color, User user) {
+        this.name = name;
+        this.color = color;
+        this.user = user;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

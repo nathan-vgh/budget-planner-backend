@@ -9,9 +9,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import tools.jackson.databind.exc.InvalidFormatException;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,14 +37,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, Object>> handleInvalidJson () {
-        return ResponseEntity.badRequest().body(
-          Map.of(
-                  "status", 400,
-                  "error", "Invalid Json",
-                  "message", "Malformed request body"
-          )
-        );
+    public ResponseEntity<ApiError> handleInvalidJson (HttpMessageNotReadableException exception) {
+        if (exception.getCause() instanceof InvalidFormatException invalidFormatException && invalidFormatException.getTargetType().isEnum()) {
+            var enumValues = invalidFormatException.getTargetType().getEnumConstants();
+
+            var allowedValues = Arrays.stream(enumValues)
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+            return ResponseEntity.badRequest().body(new ApiError("Invalid value. Allowed values: " + allowedValues));
+        }
+
+        return ResponseEntity.badRequest().body(new ApiError("Malformed Json request"));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
