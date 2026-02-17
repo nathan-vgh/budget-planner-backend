@@ -1,6 +1,5 @@
 package com.budget_planner.budget_planner.common.exceptions;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ApiError (

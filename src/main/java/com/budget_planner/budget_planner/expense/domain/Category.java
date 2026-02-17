@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -26,14 +26,14 @@ public class Category {
 
     @SuppressWarnings("FieldMayBeFinal")
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Category() {}
+    protected Category() {}
 
     public Category(String name, Color color, User user) {
         this.name = name;
@@ -61,7 +61,7 @@ public class Category {
         this.color = color;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
@@ -71,5 +71,10 @@ public class Category {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
     }
 }

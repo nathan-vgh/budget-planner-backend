@@ -1,8 +1,8 @@
 package com.budget_planner.budget_planner.user.application;
 
-import com.budget_planner.budget_planner.user.api.dto.CreateUserDto;
-import com.budget_planner.budget_planner.user.api.dto.UpdateUserDto;
-import com.budget_planner.budget_planner.user.api.dto.UserResponseDto;
+import com.budget_planner.budget_planner.user.api.dto.user.CreateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.user.UpdateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.user.UserResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

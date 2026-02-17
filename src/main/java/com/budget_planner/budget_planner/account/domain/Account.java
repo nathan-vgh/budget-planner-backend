@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -22,20 +22,20 @@ public class Account {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private AccountType type;
+    private Type type;
 
     @SuppressWarnings("FieldMayBeFinal")
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Account () {}
+    protected Account () {}
 
-    public Account(String name, AccountType type, User user) {
+    public Account(String name, Type type, User user) {
         this.name = name;
         this.type = type;
         this.user = user;
@@ -53,15 +53,15 @@ public class Account {
         this.name = name;
     }
 
-    public AccountType getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(AccountType type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
@@ -71,5 +71,10 @@ public class Account {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
     }
 }

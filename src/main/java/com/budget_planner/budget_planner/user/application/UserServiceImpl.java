@@ -1,18 +1,19 @@
 package com.budget_planner.budget_planner.user.application;
 
-import com.budget_planner.budget_planner.user.api.dto.CreateUserDto;
-import com.budget_planner.budget_planner.user.api.dto.UpdateUserDto;
-import com.budget_planner.budget_planner.user.api.dto.UserResponseDto;
+import com.budget_planner.budget_planner.user.api.dto.user.CreateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.user.UpdateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.user.UserResponseDto;
 import com.budget_planner.budget_planner.user.exception.UserNotFoundException;
 import com.budget_planner.budget_planner.user.mapping.UserMapper;
 import com.budget_planner.budget_planner.user.persist.UserRepository;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Currency;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -35,11 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID id) {
-        try {
-            userRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException exception) {
-            throw new UserNotFoundException(id);
-        }
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        userRepository.delete(user);
     }
 
     @Override
@@ -66,6 +65,25 @@ public class UserServiceImpl implements UserService {
 
         if (request.email() != null && !request.email().isBlank())
             userToBeUpdated.setEmail(request.email());
+
+        if (request.settings() != null) {
+            var settingsDto = request.settings();
+
+            var currency = settingsDto.currency() != null
+                    ? Currency.getInstance(settingsDto.currency())
+                    : null;
+
+            var locale = settingsDto.language() != null
+                    ? Locale.forLanguageTag(settingsDto.language())
+                    : null;
+
+            userToBeUpdated.setSettings(
+                    currency,
+                    settingsDto.weekStartDay(),
+                    locale,
+                    settingsDto.theme()
+            );
+        }
 
         return userMapper.userToResponseDto(userToBeUpdated);
     }

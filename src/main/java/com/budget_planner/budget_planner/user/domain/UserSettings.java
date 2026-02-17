@@ -1,46 +1,105 @@
 package com.budget_planner.budget_planner.user.domain;
 
+import com.budget_planner.budget_planner.user.persist.converter.CurrencyConverter;
+import com.budget_planner.budget_planner.user.persist.converter.LocaleConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-import java.time.OffsetDateTime;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.util.Currency;
+import java.util.Locale;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_settings", uniqueConstraints = { @UniqueConstraint(name = "uk_user_settings", columnNames = "user_id") })
+@Table(name = "user_settings")
 @SuppressWarnings("FieldMayBeFinal")
 public class UserSettings {
 
     @Id
-    @GeneratedValue
     private UUID id;
 
-    @NotBlank
-    @Column(name = "currency_code", length = 3, nullable = false)
-    private String currencyCode;
+    @NotNull
+    @Convert(converter = CurrencyConverter.class)
+    @Column(name = "currency", length = 3, nullable = false)
+    private Currency currency = Currency.getInstance("USD");
 
-    @Min(1)
-    @Max(7)
+    @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "week_start_day", nullable = false)
-    private int weekStartDay;
+    private DayOfWeek weekStartDay = DayOfWeek.MONDAY;
 
-    @NotBlank
-    @Size(max = 10)
-    private String language = "en";
+    @NotNull
+    @Convert(converter = LocaleConverter.class)
+    @Column(name = "language", length = 10, nullable = false)
+    private Locale language = Locale.forLanguageTag("en");
 
-    @NotBlank
-    @Size(max = 20)
-    private String theme = "light";
-
-    @NotBlank
-    @Size(max = 50)
-    private String timezone = "UTC";
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Theme theme = Theme.SYSTEM;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
+    @MapsId
     @NotNull
     @OneToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public UserSettings() {}
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currencyCode) {
+        this.currency = currencyCode;
+    }
+
+    public DayOfWeek getWeekStartDay() {
+        return weekStartDay;
+    }
+
+    public void setWeekStartDay(DayOfWeek weekStartDay) {
+        this.weekStartDay = weekStartDay;
+    }
+
+    public Locale getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Locale language) {
+        this.language = language;
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
+    }
 }

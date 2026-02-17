@@ -8,8 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -38,7 +38,7 @@ public class Budget {
 
     @SuppressWarnings("FieldMayBeFinal")
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
     @NotNull
     @ManyToOne(optional = false)
@@ -49,4 +49,9 @@ public class Budget {
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
+    }
 }

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -23,14 +23,14 @@ public class Tag {
 
     @SuppressWarnings("FieldMayBeFinal")
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Tag() {}
+    protected Tag() {}
 
     public Tag(String name, User user) {
         this.name = name;
@@ -49,7 +49,7 @@ public class Tag {
         this.name = name;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
@@ -59,5 +59,10 @@ public class Tag {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
     }
 }

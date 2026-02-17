@@ -5,7 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.time.OffsetDateTime;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.util.Currency;
+import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -30,9 +33,12 @@ public class User {
 
     @SuppressWarnings("FieldMayBeFinal")
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
-    public User() {}
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+    private UserSettings settings;
+
+    protected User() {}
 
     public User(String name, String email) {
         this.name = name;
@@ -43,14 +49,8 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-    }
-
-    public User(String name, UUID id, String email, String password, OffsetDateTime createdAt) {
-        this.name = name;
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
+        this.settings = new UserSettings();
+        this.settings.setUser(this);
     }
 
     public UUID getId() {
@@ -81,7 +81,30 @@ public class User {
         this.password = password;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public void setSettings(Currency currency, DayOfWeek weekStartDay, Locale language, Theme theme) {
+        if(currency != null)
+            this.settings.setCurrency(currency);
+
+        if(weekStartDay != null)
+            this.settings.setWeekStartDay(weekStartDay);
+
+        if(language != null)
+            this.settings.setLanguage(language);
+
+        if(theme != null)
+            this.settings.setTheme(theme);
+    }
+
+    public UserSettings getSettings() {
+        return settings;
+    }
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
     }
 }

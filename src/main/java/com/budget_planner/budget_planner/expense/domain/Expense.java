@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -50,7 +50,7 @@ public class Expense {
     private String description;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private Instant createdAt;
 
     @NotNull
     @ManyToOne(optional = false)
@@ -70,4 +70,9 @@ public class Expense {
     @ManyToMany
     @JoinTable(name = "expense_tags", joinColumns = @JoinColumn(name = "expense_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
+
+    @PrePersist
+    public void prePersist () {
+        this.createdAt = Instant.now();
+    }
 }

@@ -1,8 +1,6 @@
 package com.budget_planner.budget_planner.account.api.dto;
 
-import com.budget_planner.budget_planner.account.domain.AccountType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.budget_planner.budget_planner.account.domain.Type;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -12,6 +10,5 @@ public record UpdateAccountDto(
         @Size(max = 100, message = "The account name should be as much 100 characters")
         String name,
 
-        @Enumerated(EnumType.STRING)
-        AccountType type
+        Type type
 ) {}

@@ -1,8 +1,8 @@
 package com.budget_planner.budget_planner.user.api;
 
-import com.budget_planner.budget_planner.user.api.dto.CreateUserDto;
-import com.budget_planner.budget_planner.user.api.dto.UpdateUserDto;
-import com.budget_planner.budget_planner.user.api.dto.UserResponseDto;
+import com.budget_planner.budget_planner.user.api.dto.user.CreateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.user.UpdateUserDto;
+import com.budget_planner.budget_planner.user.api.dto.user.UserResponseDto;
 import com.budget_planner.budget_planner.user.application.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService service;
