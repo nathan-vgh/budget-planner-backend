@@ -18,7 +18,7 @@ public class AccountController {
 
     private final AccountService service;
 
-    AccountController (AccountService service) { this.service = service; }
+    public AccountController (AccountService service) { this.service = service; }
 
     @PostMapping
     public ResponseEntity<AccountResponseDto> createAccount (@Valid @RequestBody CreateAccountDto request) {

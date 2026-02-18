@@ -13,6 +13,7 @@ public record CreateCategoryDto(
         @Size(max = 100, message = "The category name should be as much 100 characters")
         String name,
 
+        @NotNull(message = "The color shouldn't be null")
         Color color,
 
         @NotNull(message = "The user id shouldn't be null")

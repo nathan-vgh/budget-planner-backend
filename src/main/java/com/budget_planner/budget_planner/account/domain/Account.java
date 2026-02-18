@@ -21,6 +21,7 @@ public class Account {
     @Size(max = 100)
     private String name;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Type type;
 

@@ -23,7 +23,7 @@ public class TagServiceImpl implements TagService {
     private final UserRepository userRepository;
     private final TagMapper tagMapper;
 
-    TagServiceImpl (TagRepository tagRepository, UserRepository userRepository, TagMapper tagMapper) {
+    public TagServiceImpl (TagRepository tagRepository, UserRepository userRepository, TagMapper tagMapper) {
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
         this.tagMapper = tagMapper;

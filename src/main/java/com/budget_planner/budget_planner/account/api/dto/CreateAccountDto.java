@@ -13,6 +13,7 @@ public record CreateAccountDto(
         @Size(max = 100, message = "The account name should be as much 100 characters")
         String name,
 
+        @NotNull(message = "The type shouldn't be null")
         Type type,
 
         @NotNull(message = "The user id shouldn't be null")

@@ -18,7 +18,7 @@ public class CategoryController {
 
     private final CategoryService service;
 
-    CategoryController (CategoryService service) { this.service = service; }
+    public CategoryController (CategoryService service) { this.service = service; }
 
     @PostMapping
     public ResponseEntity<CategoryResponseDto> createCategory (@Valid @RequestBody CreateCategoryDto request) {

@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService {
     private final UserRepository userRepository;
     private final AccountMapper accountMapper;
 
-    AccountServiceImpl (AccountRepository accountRepository, UserRepository userRepository, AccountMapper accountMapper) {
+    public AccountServiceImpl (AccountRepository accountRepository, UserRepository userRepository, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.accountMapper = accountMapper;

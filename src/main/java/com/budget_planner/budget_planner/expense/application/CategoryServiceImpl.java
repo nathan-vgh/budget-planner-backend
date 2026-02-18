@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final UserRepository userRepository;
     private final CategoryMapper categoryMapper;
 
-    CategoryServiceImpl (CategoryRepository categoryRepository, UserRepository userRepository, CategoryMapper categoryMapper) {
+    public CategoryServiceImpl (CategoryRepository categoryRepository, UserRepository userRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.categoryMapper = categoryMapper;

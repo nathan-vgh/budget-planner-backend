@@ -21,6 +21,7 @@ public class Category {
     @Size(max = 100)
     private String name;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Color color;
 

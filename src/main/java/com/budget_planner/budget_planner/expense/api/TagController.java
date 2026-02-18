@@ -18,7 +18,7 @@ public class TagController {
 
     private final TagService service;
 
-    TagController (TagService service) {
+    public TagController (TagService service) {
         this.service = service;
     }
 
