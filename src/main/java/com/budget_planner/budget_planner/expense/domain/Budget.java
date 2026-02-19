@@ -137,4 +137,16 @@ public class Budget {
             case YEARLY -> this.startDate.plusYears(1).minusDays(1);
         };
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Budget budget)) return false;
+        return id != null && id.equals(budget.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

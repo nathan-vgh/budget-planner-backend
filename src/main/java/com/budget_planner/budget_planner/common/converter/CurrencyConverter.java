@@ -1,4 +1,4 @@
-package com.budget_planner.budget_planner.user.persist.converter;
+package com.budget_planner.budget_planner.common.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

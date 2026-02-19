@@ -1,6 +1,6 @@
 package com.budget_planner.budget_planner.user.domain;
 
-import com.budget_planner.budget_planner.user.persist.converter.CurrencyConverter;
+import com.budget_planner.budget_planner.common.converter.CurrencyConverter;
 import com.budget_planner.budget_planner.user.persist.converter.LocaleConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -101,5 +101,17 @@ public class UserSettings {
     @PrePersist
     public void prePersist () {
         this.createdAt = Instant.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserSettings userSettings)) return false;
+        return id != null && id.equals(userSettings.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

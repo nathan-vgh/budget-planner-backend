@@ -65,4 +65,16 @@ public class Tag {
     public void prePersist () {
         this.createdAt = Instant.now();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag tag)) return false;
+        return id != null && id.equals(tag.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
