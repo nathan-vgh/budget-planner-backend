@@ -1,4 +1,4 @@
-package com.budget_planner.budget_planner.expense.application;
+package com.budget_planner.budget_planner.expense.application.category;
 
 import com.budget_planner.budget_planner.expense.api.dto.category.CategoryResponseDto;
 import com.budget_planner.budget_planner.expense.api.dto.category.CreateCategoryDto;

@@ -3,7 +3,7 @@ package com.budget_planner.budget_planner.expense.api;
 import com.budget_planner.budget_planner.expense.api.dto.budget.BudgetResponseDto;
 import com.budget_planner.budget_planner.expense.api.dto.budget.CreateBudgetDto;
 import com.budget_planner.budget_planner.expense.api.dto.budget.UpdateBudgetDto;
-import com.budget_planner.budget_planner.expense.application.BudgetService;
+import com.budget_planner.budget_planner.expense.application.budget.BudgetService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

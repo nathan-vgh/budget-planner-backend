@@ -17,7 +17,7 @@ public record UpdateBudgetDto(
         @Digits(integer = 12, fraction = 2, message = "The integer part could be up to 12 digits, while the fraction part could be just two digits")
         BigDecimal amount,
 
-        @FutureOrPresent
+        @FutureOrPresent(message = "The date could be only a future or present one")
         LocalDate startDate,
 
         UUID categoryId

@@ -1,4 +1,4 @@
-package com.budget_planner.budget_planner.expense.application;
+package com.budget_planner.budget_planner.expense.application.tag;
 
 import com.budget_planner.budget_planner.expense.api.dto.tag.CreateTagDto;
 import com.budget_planner.budget_planner.expense.api.dto.tag.TagResponseDto;

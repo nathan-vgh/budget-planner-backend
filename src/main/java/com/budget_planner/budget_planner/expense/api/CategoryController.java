@@ -3,7 +3,7 @@ package com.budget_planner.budget_planner.expense.api;
 import com.budget_planner.budget_planner.expense.api.dto.category.CategoryResponseDto;
 import com.budget_planner.budget_planner.expense.api.dto.category.CreateCategoryDto;
 import com.budget_planner.budget_planner.expense.api.dto.category.UpdateCategoryDto;
-import com.budget_planner.budget_planner.expense.application.CategoryService;
+import com.budget_planner.budget_planner.expense.application.category.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

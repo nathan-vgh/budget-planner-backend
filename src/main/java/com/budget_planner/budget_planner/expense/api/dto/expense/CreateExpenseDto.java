@@ -19,7 +19,7 @@ public record CreateExpenseDto(
         Currency currency,
 
         @NotNull(message = "The expense date shouldn't be null")
-        @FutureOrPresent(message = "The date could be only a future or present one")
+        @PastOrPresent(message = "The date could be only a past or present one")
         LocalDate expenseDate,
 
         @NotNull(message = "The description shouldn't be null")

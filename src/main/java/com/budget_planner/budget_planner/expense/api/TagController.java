@@ -3,7 +3,7 @@ package com.budget_planner.budget_planner.expense.api;
 import com.budget_planner.budget_planner.expense.api.dto.tag.CreateTagDto;
 import com.budget_planner.budget_planner.expense.api.dto.tag.TagResponseDto;
 import com.budget_planner.budget_planner.expense.api.dto.tag.UpdateTagDto;
-import com.budget_planner.budget_planner.expense.application.TagService;
+import com.budget_planner.budget_planner.expense.application.tag.TagService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

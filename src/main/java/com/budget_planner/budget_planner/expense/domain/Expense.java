@@ -52,7 +52,7 @@ public class Expense {
     private BigDecimal exchangeRateUsed;
 
     @NotNull
-    @FutureOrPresent
+    @PastOrPresent
     @Column(name = "expense_date", nullable = false)
     private LocalDate expenseDate;
 
