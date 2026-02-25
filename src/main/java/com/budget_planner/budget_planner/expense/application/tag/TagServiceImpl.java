@@ -69,8 +69,7 @@ public class TagServiceImpl implements TagService {
         var tagToBeUpdated = tagRepository.findById(id)
                 .orElseThrow(() -> new TagNotFoundException(id));
 
-        if (request.name() != null && !request.name().isBlank())
-            tagToBeUpdated.setName(request.name());
+        tagMapper.merge(tagToBeUpdated, request);
 
         return tagMapper.tagToResponseDto(tagToBeUpdated);
     }
