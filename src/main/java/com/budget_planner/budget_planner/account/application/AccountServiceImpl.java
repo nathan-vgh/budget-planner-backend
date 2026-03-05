@@ -69,11 +69,7 @@ public class AccountServiceImpl implements AccountService {
         var accountToBeUpdated = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException(id));
 
-        if (request.name() != null && !request.name().isBlank())
-            accountToBeUpdated.setName(request.name());
-
-        if (request.type() != null)
-            accountToBeUpdated.setType(request.type());
+        accountMapper.merge(accountToBeUpdated, request);
 
         return accountMapper.entityToResponseDto(accountToBeUpdated);
     }

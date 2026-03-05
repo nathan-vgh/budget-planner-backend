@@ -66,11 +66,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto updateCategory(UUID id, UpdateCategoryDto request) {
-        var category = categoryRepository.findById(id)
+        var categoryToBeUpdated = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        categoryMapper.merge(category, request);
+        categoryMapper.merge(categoryToBeUpdated, request);
 
-        return categoryMapper.categoryToResponseDto(category);
+        return categoryMapper.categoryToResponseDto(categoryToBeUpdated);
     }
 }
