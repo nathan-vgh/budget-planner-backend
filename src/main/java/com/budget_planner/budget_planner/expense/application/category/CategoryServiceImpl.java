@@ -69,11 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         var category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        if (request.name() != null && !request.name().isBlank())
-            category.setName(request.name());
-
-        if (request.color() != null)
-            category.setColor(request.color());
+        categoryMapper.merge(category, request);
 
         return categoryMapper.categoryToResponseDto(category);
     }

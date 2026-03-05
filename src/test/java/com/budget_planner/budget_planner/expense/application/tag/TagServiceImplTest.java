@@ -144,7 +144,7 @@ class TagServiceImplTest {
 
     @Nested
     @DisplayName("Get tags by user tests")
-    class GetTagsByUserTest {
+    class GetTagsByUserTests {
 
         @Test
         @DisplayName("Should get tags list")
