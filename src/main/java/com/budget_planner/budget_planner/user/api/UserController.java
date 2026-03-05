@@ -5,8 +5,6 @@ import com.budget_planner.budget_planner.user.api.dto.user.UpdateUserDto;
 import com.budget_planner.budget_planner.user.api.dto.user.UserResponseDto;
 import com.budget_planner.budget_planner.user.application.UserService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,12 +37,6 @@ public class UserController {
     public ResponseEntity<Void> deleteUser (@PathVariable UUID id) {
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<Page<UserResponseDto>> getAllUsers (Pageable pageable) {
-        var users = service.getAllUsers(pageable);
-        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")

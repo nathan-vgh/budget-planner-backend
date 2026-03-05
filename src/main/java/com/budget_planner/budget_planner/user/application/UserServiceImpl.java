@@ -7,13 +7,9 @@ import com.budget_planner.budget_planner.user.exception.UserNotFoundException;
 import com.budget_planner.budget_planner.user.mapping.UserMapper;
 import com.budget_planner.budget_planner.user.persist.UserRepository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Currency;
-import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -43,12 +39,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::userToResponseDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public UserResponseDto getUserById(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -60,30 +50,7 @@ public class UserServiceImpl implements UserService {
         var userToBeUpdated = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        if (request.name() != null && !request.name().isBlank())
-            userToBeUpdated.setName(request.name());
-
-        if (request.email() != null && !request.email().isBlank())
-            userToBeUpdated.setEmail(request.email());
-
-        if (request.settings() != null) {
-            var settingsDto = request.settings();
-
-            var currency = settingsDto.currency() != null
-                    ? Currency.getInstance(settingsDto.currency())
-                    : null;
-
-            var locale = settingsDto.language() != null
-                    ? Locale.forLanguageTag(settingsDto.language())
-                    : null;
-
-            userToBeUpdated.setSettings(
-                    currency,
-                    settingsDto.weekStartDay(),
-                    locale,
-                    settingsDto.theme()
-            );
-        }
+        userMapper.merge(userToBeUpdated, request);
 
         return userMapper.userToResponseDto(userToBeUpdated);
     }
