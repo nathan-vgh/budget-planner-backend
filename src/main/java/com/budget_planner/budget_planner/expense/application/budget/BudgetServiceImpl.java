@@ -76,16 +76,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         var newCategory = categoryRepository.findById(request.categoryId());
 
-        if (request.period() != null)
-            budgetToBeUpdated.setPeriod(request.period());
-
-        if (request.amount() != null)
-            budgetToBeUpdated.setAmount(request.amount());
-
-        if (request.startDate() != null)
-            budgetToBeUpdated.setStartDate(request.startDate());
-
-        newCategory.ifPresent(budgetToBeUpdated::setCategory);
+        budgetMapper.merge(budgetToBeUpdated, request, newCategory.orElse(null));
 
         return budgetMapper.budgetToResponseDto(budgetToBeUpdated);
     }
