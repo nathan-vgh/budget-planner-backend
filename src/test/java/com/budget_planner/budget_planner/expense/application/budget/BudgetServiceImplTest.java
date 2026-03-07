@@ -60,8 +60,9 @@ class BudgetServiceImplTest {
 
     private UUID categoryId;
     private Category category;
-    private Category updateCategory;
-    private CategoryResponseDto updateCategoryResponse;
+    private Category updatedCategory;
+    private CategoryResponseDto categoryResponse;
+    private CategoryResponseDto updatedCategoryResponse;
 
     private UUID userId;
     private User user;
@@ -72,7 +73,7 @@ class BudgetServiceImplTest {
     private CreateBudgetDto createRequest;
     private UpdateBudgetDto updateRequest;
     private BudgetResponseDto response;
-    private BudgetResponseDto responseWithCategoryUpdated;
+    private BudgetResponseDto responseWithUpdatedCategory;
 
     @BeforeEach
     void setup () {
@@ -82,16 +83,16 @@ class BudgetServiceImplTest {
 
         this.user = new User("TestUser", "test@domain.com", "Test123.");
         this.category = new Category("TestCategory", Color.BLUE, user);
-        this.updateCategory = new Category("TestUpdateCategory", Color.RED, user);
-        this.updateCategoryResponse = new CategoryResponseDto(categoryId, "TestUpdateCategory", Color.RED.getHex(), userId);
         this.budget = new Budget(Period.MONTHLY, BigDecimal.ONE, LocalDate.now(), user, category);
 
-        var categoryResponse = new CategoryResponseDto(categoryId, "TestCategory", Color.BLUE.getHex(), userId);
+        this.updatedCategory = new Category("TestUpdatedCategory", Color.RED, user);
+        this.categoryResponse = new CategoryResponseDto(categoryId, "TestCategory", Color.BLUE.getHex(), userId);
+        this.updatedCategoryResponse = new CategoryResponseDto(categoryId, "TestUpdatedCategory", Color.RED.getHex(), userId);
 
         this.createRequest = new CreateBudgetDto(Period.MONTHLY, BigDecimal.ONE, LocalDate.now(), userId, categoryId);
         this.updateRequest = new UpdateBudgetDto(Period.WEEKLY, BigDecimal.TEN, null, categoryId);
         this.response = new BudgetResponseDto(budgetId, Period.MONTHLY, BigDecimal.ONE, LocalDate.now(), LocalDate.now().plusMonths(1).minusDays(1), userId, categoryResponse);
-        this.responseWithCategoryUpdated = new BudgetResponseDto(budgetId, Period.MONTHLY, BigDecimal.ONE, LocalDate.now(), LocalDate.now().plusMonths(1).minusDays(1), userId, updateCategoryResponse);
+        this.responseWithUpdatedCategory = new BudgetResponseDto(budgetId, Period.MONTHLY, BigDecimal.ONE, LocalDate.now(), LocalDate.now().plusMonths(1).minusDays(1), userId, updatedCategoryResponse);
     }
 
     @Nested
@@ -306,20 +307,20 @@ class BudgetServiceImplTest {
                     .thenReturn(Optional.of(budget));
 
             when(categoryRepository.findById(categoryId))
-                    .thenReturn(Optional.of(updateCategory));
+                    .thenReturn(Optional.of(updatedCategory));
 
             when(budgetMapper.budgetToResponseDto(budget))
-                    .thenReturn(responseWithCategoryUpdated);
+                    .thenReturn(responseWithUpdatedCategory);
 
-            var updateBudget = service.updateBudget(budgetId, updateRequest);
+            var updatedBudget = service.updateBudget(budgetId, updateRequest);
 
-            assertNotNull(updateBudget);
-            assertEquals(updateBudget, responseWithCategoryUpdated);
-            assertEquals(updateBudget.category(), updateCategoryResponse);
+            assertNotNull(updatedBudget);
+            assertEquals(updatedBudget, responseWithUpdatedCategory);
+            assertEquals(updatedBudget.category(), updatedCategoryResponse);
 
             verify(budgetRepository, times(1)).findById(budgetId);
             verify(categoryRepository, times(1)).findById(categoryId);
-            verify(budgetMapper, times(1)).merge(budget, updateRequest, updateCategory);
+            verify(budgetMapper, times(1)).merge(budget, updateRequest, updatedCategory);
             verify(budgetMapper, times(1)).budgetToResponseDto(budget);
         }
 
@@ -339,6 +340,7 @@ class BudgetServiceImplTest {
 
             assertNotNull(updatedBudget);
             assertEquals(updatedBudget, response);
+            assertEquals(updatedBudget.category(), categoryResponse);
 
             verify(budgetRepository, times(1)).findById(budgetId);
             verify(categoryRepository, times(1)).findById(categoryId);

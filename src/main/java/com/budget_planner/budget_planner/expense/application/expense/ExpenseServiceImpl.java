@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -50,18 +49,14 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .orElseThrow(() -> new UserNotFoundException(request.userId()));
         var account = accountRepository.findById(request.accountId())
                 .orElseThrow(() -> new AccountNotFoundException(request.accountId()));
-        var category = categoryRepository.findById(request.accountId())
+        var category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(request.categoryId()));
         var tags = new HashSet<>(tagRepository.findAllById(request.tagsId()));
 
         if (request.tagsId().size() != tags.size())
             throw new TagNotFoundException();
 
-        var createdExpense = expenseMapper.createExpenseDtoToEntity(request, user, account, category, tags);
-
-        // todo: In this part of the code, the usd amount should be calculated calling the exchange rate service.
-        createdExpense.setAmountUsd(BigDecimal.ONE);
-        createdExpense.setExchangeRateUsed(BigDecimal.ONE);
+        var createdExpense = expenseRepository.save(expenseMapper.createExpenseDtoToEntity(request, user, account, category, tags));
 
         return expenseMapper.expenseToResponseDto(createdExpense);
     }
@@ -100,25 +95,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         var category = categoryRepository.findById(request.categoryId());
         var tags = new HashSet<>(tagRepository.findAllById(request.tagsId()));
 
-        if (request.currency() != null)
-            expenseToBeUpdated.setCurrency(request.currency());
-
-        if (request.expenseDate() != null)
-            expenseToBeUpdated.setExpenseDate(request.expenseDate());
-
-        if (request.description() != null && !request.description().isBlank())
-            expenseToBeUpdated.setDescription(request.description());
-
-        if (!tags.isEmpty())
-            expenseToBeUpdated.setTags(tags);
-
-        if (request.amount() != null) {
-            expenseToBeUpdated.setAmount(request.amount());
-            // todo: here we need to recalculate the amount in usd and update the exchange rate used.
-        }
-
-        account.ifPresent(expenseToBeUpdated::setAccount);
-        category.ifPresent(expenseToBeUpdated::setCategory);
+        expenseMapper.merge(expenseToBeUpdated, request, account.orElse(null), category.orElse(null), tags);
 
         return expenseMapper.expenseToResponseDto(expenseToBeUpdated);
     }
