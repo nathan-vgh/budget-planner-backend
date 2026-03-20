@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Account service unit test")
+@DisplayName("Account service unit tests")
 class AccountServiceImplTest {
 
     @Mock

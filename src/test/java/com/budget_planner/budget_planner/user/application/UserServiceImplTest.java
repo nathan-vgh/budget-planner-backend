@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("User service unit test")
+@DisplayName("User service unit tests")
 class UserServiceImplTest {
 
     @Mock

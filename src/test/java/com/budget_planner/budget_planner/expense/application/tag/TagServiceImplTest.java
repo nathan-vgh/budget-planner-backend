@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Tag service unit test")
+@DisplayName("Tag service unit tests")
 class TagServiceImplTest {
 
     @Mock

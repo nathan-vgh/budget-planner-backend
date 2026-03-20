@@ -40,7 +40,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Budget service unit test")
+@DisplayName("Budget service unit tests")
 class BudgetServiceImplTest {
 
     @Mock
