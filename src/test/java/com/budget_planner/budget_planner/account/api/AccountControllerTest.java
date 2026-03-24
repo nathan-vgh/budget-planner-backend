@@ -6,6 +6,7 @@ import com.budget_planner.budget_planner.account.api.dto.UpdateAccountDto;
 import com.budget_planner.budget_planner.account.application.AccountService;
 import com.budget_planner.budget_planner.account.domain.Type;
 import com.budget_planner.budget_planner.account.exception.AccountNotFoundException;
+import com.budget_planner.budget_planner.user.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -63,7 +64,7 @@ class AccountControllerTest {
         @Test
         @DisplayName("Should create account successfully")
         void shouldCreateAccountSuccessfully () throws Exception {
-            when(service.createAccount(any()))
+            when(service.createAccount(createRequest))
                     .thenReturn(response);
 
             var expectedLocation = "/api/v1/accounts/" + response.id();
@@ -78,7 +79,22 @@ class AccountControllerTest {
                     .andExpect(jsonPath("$.type").value(response.type().toString()))
                     .andExpect(jsonPath("$.userId").value(response.userId().toString()));
 
-            verify(service, times(1)).createAccount(any());
+            verify(service, times(1)).createAccount(createRequest);
+        }
+
+        @Test
+        @DisplayName("Should throw UserNotFound exception")
+        void shouldThrowUserNotFoundException () throws Exception {
+            doThrow(UserNotFoundException.class)
+                    .when(service)
+                    .createAccount(createRequest);
+
+            mockMvc.perform(post("/api/v1/accounts")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(createRequest)))
+                    .andExpect(status().isNotFound());
+
+            verify(service, times(1)).createAccount(createRequest);
         }
 
         @Test
@@ -214,6 +230,21 @@ class AccountControllerTest {
                     .andExpect(jsonPath("$.name").value(response.name()))
                     .andExpect(jsonPath("$.type").value(response.type().toString()))
                     .andExpect(jsonPath("$.userId").value(response.userId().toString()));
+
+            verify(service, times(1)).updateAccount(accountId, updateRequest);
+        }
+
+        @Test
+        @DisplayName("Should throw AccountNotFound exception")
+        void shouldThrowAccountNotFoundException () throws Exception {
+            doThrow(AccountNotFoundException.class)
+                    .when(service)
+                    .updateAccount(accountId, updateRequest);
+
+            mockMvc.perform(put("/api/v1/accounts/{id}", accountId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateRequest)))
+                    .andExpect(status().isNotFound());
 
             verify(service, times(1)).updateAccount(accountId, updateRequest);
         }
